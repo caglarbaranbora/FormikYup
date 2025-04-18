@@ -1,9 +1,7 @@
-import React from "react";
 import "./App.css";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import PasswordErrorMessage from "";
-import { validateEmail } from "./utils/emailUtil";
+import PasswordErrorMessage from "./components/PasswordMessage";
 
 function App() {
   const formik = useFormik({
@@ -15,18 +13,17 @@ function App() {
       role: "role",
     },
     validationSchema: Yup.object({
-      firstName: Yup.string().required("First name is required"),
-      lastName: Yup.string(), // Opsiyonel
-      email: Yup.string()
-        .required("Email is required")
-        .test("is-valid", "Invalid email", validateEmail),
+      firstName: Yup.string().required("Required"),
+      email: Yup.string().email("Invalid email").required("Required"),
       password: Yup.string()
-        .min(8, "Password must be at least 8 characters")
-        .required("Password is required"),
-      role: Yup.string().notOneOf(["role"], "Please select a role"),
+        .min(8, "Password must be 8 characters or more")
+        .required("Required"),
+      role: Yup.string()
+        .oneOf(["individual", "business"], "Select a valid role")
+        .required("Required"),
     }),
     onSubmit: (values, { resetForm }) => {
-      alert(JSON.stringify(values, null, 2));
+      alert("Account Created!");
       resetForm();
     },
   });
@@ -49,9 +46,9 @@ function App() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.firstName && formik.errors.firstName && (
-              <div className="Error">{formik.errors.firstName}</div>
-            )}
+            {formik.touched.firstName && formik.errors.firstName ? (
+              <div className="FieldError">{formik.errors.firstName}</div>
+            ) : null}
           </div>
 
           <div className="Field">
@@ -77,9 +74,9 @@ function App() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.email && formik.errors.email && (
-              <div className="Error">{formik.errors.email}</div>
-            )}
+            {formik.touched.email && formik.errors.email ? (
+              <div className="FieldError">{formik.errors.email}</div>
+            ) : null}
           </div>
 
           <div className="Field">
@@ -113,9 +110,9 @@ function App() {
               <option value="individual">Individual</option>
               <option value="business">Business</option>
             </select>
-            {formik.touched.role && formik.errors.role && (
-              <div className="Error">{formik.errors.role}</div>
-            )}
+            {formik.touched.role && formik.errors.role ? (
+              <div className="FieldError">{formik.errors.role}</div>
+            ) : null}
           </div>
 
           <button type="submit" disabled={!formik.isValid || !formik.dirty}>
