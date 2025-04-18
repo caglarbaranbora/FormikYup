@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import PasswordErrorMessage from "./components/PasswordMessage";
 
-function App() {
+export default function App() {
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -123,5 +123,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
